@@ -149,7 +149,7 @@ async function refreshIP() {
 	const result = await mac.all();
 	const connected = deviceState.isConnected;
 	if (process.platform === 'linux') {
-		deviceState.ip = result.wlan0.ipv4;
+		deviceState.ip = result.eth0.ipv4;
 		deviceState.mac = (result.wlan0.mac as string)
 			.replaceAll(':', '')
 			.toLocaleUpperCase();
@@ -165,7 +165,7 @@ async function refreshIP() {
 	// if (connected !== deviceState.isConnected) {
 	// 	ipcMain.emit('connected', 'done');
 	// }
-
+	deviceState.isConnected = true;
 	ipcMain.emit('connected', 'done');
 }
 
