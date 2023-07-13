@@ -162,9 +162,11 @@ async function refreshIP() {
 		deviceState.isConnected = true;
 	}
 
-	if (connected !== deviceState.isConnected) {
-		ipcMain.emit('connected', 'done');
-	}
+	// if (connected !== deviceState.isConnected) {
+	// 	ipcMain.emit('connected', 'done');
+	// }
+
+	ipcMain.emit('connected', 'done');
 }
 
 async function handleRPC(source: string, payload: Buffer) {
