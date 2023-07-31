@@ -27,14 +27,14 @@ const EventDispatcher = () => {
 		window.electron.ipcRenderer.on(ON_MACHINE_OP_FAIL, (payload) => {
 			notify.error({
 				text: payload as string,
-				title: 'USW',
+				title: 'USW_',
 			});
 		});
 
 		window.electron.ipcRenderer.on(ON_MACHINE_OP_DONE, (payload) => {
 			notify.success({
 				text: payload as string,
-				title: 'USW',
+				title: 'USW_',
 			});
 		});
 	}, [dispatch, notify]);

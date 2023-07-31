@@ -66,7 +66,7 @@ const DashboardPage = () => {
 					body={data['Splice'] ? data['Splice'] : '--'}
 				/>
 				<Card icon={BubbleImage} title="ErrNo" body={errCount} />
-				<Card icon={BubbleImage} title="Machine" body={'USW'} />
+				<Card icon={BubbleImage} title="Machine" body={'USW_'} />
 				<Card icon={BubbleImage} title="Count" body={opCount} />
 			</div>
 		</>
