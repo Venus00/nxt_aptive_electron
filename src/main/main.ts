@@ -150,23 +150,28 @@ async function refreshIP() {
 	const connected = deviceState.isConnected;
 	if (process.platform === 'linux') {
 		deviceState.ip = result.eth0.ipv4;
-		deviceState.mac = (result.wlan0.mac as string)
-			.replaceAll(':', '')
-			.toLocaleUpperCase();
+		if (result.wlan0 === undefined) {
+			deviceState.mac = (result.eth0.mac as string)
+				.replaceAll(':', '')
+				.toLocaleUpperCase();
+		} else {
+			deviceState.mac = (result.wlan0.mac as string)
+				.replaceAll(':', '')
+				.toLocaleUpperCase();
+		}
+
 		deviceState.isConnected = true;
 	} else {
-		deviceState.ip = result.WiFi.ipv4;
-		deviceState.mac = (result.WiFi.mac as string)
+		deviceState.ip = result['Wi-Fi'].ipv4;
+		deviceState.mac = (result['Wi-Fi'].mac as string)
 			.replaceAll(':', '')
 			.toLocaleUpperCase();
 		deviceState.isConnected = true;
 	}
 
-	// if (connected !== deviceState.isConnected) {
-	// 	ipcMain.emit('connected', 'done');
-	// }
-	deviceState.isConnected = true;
-	ipcMain.emit('connected', 'done');
+	if (connected !== deviceState.isConnected) {
+		ipcMain.emit('connected', 'done');
+	}
 }
 
 async function handleRPC(source: string, payload: Buffer) {
@@ -182,8 +187,9 @@ ipcMain.on('startup', () => {
 		client.addSubscription('devices/_id/rpc', (c, msg) => {
 			handleRPC(c.name, msg);
 		});
-
-		client.connect();
+		if (client.connectionStatus() === false) {
+			client.connect();
+		}
 	}
 });
 
@@ -195,6 +201,8 @@ ipcMain.on('connected', () => {
 		const password = generateMqttPassword(id);
 
 		globalConfig.connection.brokers.forEach((broker: any) => {
+			const alreadyCreated = clients.find((c) => c.name === broker.name);
+			if (alreadyCreated) return;
 			clients.push(
 				new ConnectionClient(
 					broker.name,
