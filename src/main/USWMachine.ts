@@ -83,7 +83,11 @@ export class USWMachine {
 		const res: any = {};
 		for (let index = 0; index < data.payload.headers.length; index++) {
 			const h = data.payload.headers[index];
-			res[h] = data.payload.data[index];
+			if (h.includes('\\') || h.includes('\\r') || h.includes('\\n')) {
+				continue;
+			} else {
+				res[h] = data.payload.data[index];
+			}
 		}
 
 		this.state.data = res;

@@ -149,28 +149,23 @@ async function refreshIP() {
 	const result = await mac.all();
 	const connected = deviceState.isConnected;
 	if (process.platform === 'linux') {
-		if (result.eth0) {
-			deviceState.ip = result.eth0.ipv4;
-			deviceState.mac = (result.eth0.mac as string)
-				.replaceAll(':', '')
-				.toLocaleUpperCase();
-
-			if (result.wlan0 !== undefined) {
-				deviceState.mac = (result.wlan0.mac as string)
-					.replaceAll(':', '')
-					.toLocaleUpperCase();
-			}
-			deviceState.isConnected = true;
-		} else if (result.wlan0) {
+		if (result.eth0 === undefined) {
 			deviceState.ip = result.wlan0.ipv4;
 			deviceState.mac = (result.wlan0.mac as string)
 				.replaceAll(':', '')
 				.toLocaleUpperCase();
 			deviceState.isConnected = true;
 		} else {
-			deviceState.isConnected = false;
-			deviceState.ip = '0.0.0.0';
-			deviceState.mac = '00:00:00:00:00:00';
+			deviceState.ip = result.eth0.ipv4;
+			if (result.wlan0 === undefined) {
+				deviceState.mac = (result.eth0.mac as string)
+					.replaceAll(':', '')
+					.toLocaleUpperCase();
+			} else {
+				deviceState.mac = (result.wlan0.mac as string)
+					.replaceAll(':', '')
+					.toLocaleUpperCase();
+			}
 		}
 	} else {
 		deviceState.ip = result['Wi-Fi'].ipv4;
@@ -198,7 +193,9 @@ ipcMain.on('startup', () => {
 		client.addSubscription('devices/_id/rpc', (c, msg) => {
 			handleRPC(c.name, msg);
 		});
-		client.connect();
+		if (client.connectionStatus() === false) {
+			client.connect();
+		}
 	}
 });
 
@@ -211,24 +208,24 @@ ipcMain.on('connected', () => {
 
 		globalConfig.connection.brokers.forEach((broker: any) => {
 			const alreadyCreated = clients.find((c) => c.name === broker.name);
-			if (alreadyCreated === undefined) {
-				clients.push(
-					new ConnectionClient(
-						broker.name,
-						broker.ip,
-						broker.port,
-						`044${id}`,
-						username,
-						password
-					)
-				);
-			}
+			if (alreadyCreated) return;
+			clients.push(
+				new ConnectionClient(
+					broker.name,
+					broker.ip,
+					broker.port,
+					`044${id}`,
+					username,
+					password
+				)
+			);
 		});
 		ipcMain.emit('startup');
 	} catch (error) {
 		console.log((error as any).message);
 	}
 });
+
 app.on('ready', () => {
 	refreshIP();
 	hearthBeat();
