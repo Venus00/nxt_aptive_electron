@@ -166,6 +166,7 @@ async function refreshIP() {
 					.replaceAll(':', '')
 					.toLocaleUpperCase();
 			}
+			deviceState.isConnected = true;
 		}
 	} else {
 		deviceState.ip = result['Wi-Fi'].ipv4;
