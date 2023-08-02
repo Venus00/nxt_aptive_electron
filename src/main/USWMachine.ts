@@ -81,7 +81,7 @@ export class USWMachine {
 		const data = JSON.parse(decripted);
 		//console.log(data);
 		const res: any = {};
-		for (let index = 0; index < data.payload.headers.length; index++) {
+		for (let index = 0; index < data.payload.headers.length - 1; index++) {
 			const h = data.payload.headers[index];
 			if (h.includes('\\') || h.includes('\\r') || h.includes('\\n')) {
 				continue;
