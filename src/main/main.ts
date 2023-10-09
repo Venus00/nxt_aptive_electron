@@ -24,14 +24,14 @@ import {
 	isDebug,
 	resolveHtmlPath,
 } from './util';
-import {
-	ON_DEVICE_STATE_UPDATE,
-	ON_MACHINE_OP_DONE,
-	ON_MACHINE_OP_FAIL,
-	ON_MACHINE_STATE_UPDATE,
-} from '../shared/Channels';
+// import {
+// 	ON_DEVICE_STATE_UPDATE,
+// 	ON_MACHINE_OP_DONE,
+// 	ON_MACHINE_OP_FAIL,
+// 	ON_MACHINE_STATE_UPDATE,
+// } from '../shared/Channels';
 import { ConnectionClient } from './ConnectionClient';
-import { EventType, USWMachine } from './USWMachine';
+// import { EventType, USWMachine } from './USWMachine';
 
 app.disableHardwareAcceleration();
 
@@ -39,10 +39,10 @@ let mainWindow: BrowserWindow | null = null;
 let globalConfig: any;
 const clients: ConnectionClient[] = [];
 // eslint-disable-next-line @typescript-eslint/no-use-before-define
-const machine = new USWMachine(
-	process.platform === 'linux' ? '/dev/ttyS1' : 'COM13',
-	onMachineEvent
-);
+// const machine = new USWMachine(
+// 	process.platform === 'linux' ? '/dev/ttyS1' : 'COM13',
+// 	onMachineEvent
+// );
 
 const deviceState: IDeviceState = {
 	code: 0,
@@ -102,48 +102,48 @@ const createWindow = async () => {
  *  LifeCycle Handlers
  */
 
-function onMachineEvent(evt: EventType, payload: Buffer) {
-	switch (evt) {
-		case EventType.ON_FAIL:
-			console.log('OP FAILED');
-			mainWindow?.webContents.send(ON_MACHINE_OP_FAIL, payload);
-			clients.forEach((client) => {
-				client.publish(
-					'devices/_id/events',
-					JSON.stringify({
-						event: ON_MACHINE_OP_FAIL,
-						payload,
-					})
-				);
-			});
-			break;
-		case EventType.ON_OP:
-			console.log('OPERATION DONE');
-			mainWindow?.webContents.send(ON_MACHINE_OP_DONE, 'OPERATION DONE');
-			clients.forEach((client) => {
-				client.publish('devices/_id/events', 'OPERATION DONE');
-			});
-			break;
-		case EventType.ON_DATA:
-			const data = JSON.stringify({
-				device: deviceState,
-				state: payload,
-			});
-			console.log(data);
-			mainWindow?.webContents.send(ON_MACHINE_STATE_UPDATE, payload);
-			clients.forEach((client) => {
-				client.publish('devices/_id/data', data);
-			});
-			break;
-		default:
-			break;
-	}
-}
+// function onMachineEvent(evt: EventType, payload: Buffer) {
+// 	switch (evt) {
+// 		case EventType.ON_FAIL:
+// 			console.log('OP FAILED');
+// 			mainWindow?.webContents.send(ON_MACHINE_OP_FAIL, payload);
+// 			clients.forEach((client) => {
+// 				client.publish(
+// 					'devices/_id/events',
+// 					JSON.stringify({
+// 						event: ON_MACHINE_OP_FAIL,
+// 						payload,
+// 					})
+// 				);
+// 			});
+// 			break;
+// 		case EventType.ON_OP:
+// 			console.log('OPERATION DONE');
+// 			mainWindow?.webContents.send(ON_MACHINE_OP_DONE, 'OPERATION DONE');
+// 			clients.forEach((client) => {
+// 				client.publish('devices/_id/events', 'OPERATION DONE');
+// 			});
+// 			break;
+// 		case EventType.ON_DATA:
+// 			const data = JSON.stringify({
+// 				device: deviceState,
+// 				state: payload,
+// 			});
+// 			console.log(data);
+// 			mainWindow?.webContents.send(ON_MACHINE_STATE_UPDATE, payload);
+// 			clients.forEach((client) => {
+// 				client.publish('devices/_id/data', data);
+// 			});
+// 			break;
+// 		default:
+// 			break;
+// 	}
+// }
 
-function hearthBeat() {
-	deviceState.uptime += 1;
-	mainWindow?.webContents.send(ON_DEVICE_STATE_UPDATE, deviceState);
-}
+// function hearthBeat() {
+// 	deviceState.uptime += 1;
+// 	mainWindow?.webContents.send(ON_DEVICE_STATE_UPDATE, deviceState);
+// }
 
 async function refreshIP() {
 	const result = await mac.all();
@@ -167,6 +167,7 @@ async function refreshIP() {
 					.toLocaleUpperCase();
 			}
 			deviceState.isConnected = true;
+			console.log("connected")
 		}
 	} else {
 		deviceState.ip = result['Wi-Fi'].ipv4;
@@ -174,6 +175,7 @@ async function refreshIP() {
 			.replaceAll(':', '')
 			.toLocaleUpperCase();
 		deviceState.isConnected = true;
+		console.log("connected")
 	}
 
 	if (connected !== deviceState.isConnected) {
@@ -229,8 +231,8 @@ ipcMain.on('connected', () => {
 
 app.on('ready', () => {
 	refreshIP();
-	hearthBeat();
-	setInterval(hearthBeat, 1000);
+	// hearthBeat();
+	// setInterval(hearthBeat, 1000);
 	setInterval(refreshIP, 10000);
 
 	const file = fs.readFileSync(getAssetPath('cfg.json'));

@@ -1,7 +1,8 @@
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from 'renderer/store/rootReducer';
-
+import { socket } from 'renderer/features/socket';
+import { useEffect, useState } from 'react';
 /* eslint-disable react/prop-types */
 interface ComponentPropTypes {
 	logo?: string;
@@ -18,6 +19,30 @@ const AppBar: React.FC<ComponentPropTypes> = ({
 	const { ip, isConnected, machine } = useSelector(
 		(state: RootState) => state.device
 	);
+
+	const [data,setData] = useState<any>('');
+	// useEffect(() => {
+	// 	function onConnect() {
+	// 		console.log("connected");
+	// 	}
+	
+	// 	function onDisconnect() {
+	// 	  	console.log("disconneted")
+	// 	}
+	
+	// 	socket.on('connect', onConnect);
+	// 	socket.on('disconnect', onDisconnect);
+	// 	socket.on('machine',(data)=>{
+	// 		setData(data);
+	// 	});
+
+	
+	// 	return () => {
+	// 	  socket.off('connect', onConnect);
+	// 	  socket.off('disconnect', onDisconnect);
+	// 	  socket.off('machine');
+	// 	};
+	//   }, []);
 	return (
 		<div className="w-full h-16 px-8 py-2 flex justify-evenly items-center bg-white shadow-md">
 			{/* APTIVE LOGO */}
@@ -42,7 +67,7 @@ const AppBar: React.FC<ComponentPropTypes> = ({
 				</div>
 
 				<div className="font-bold text-xl">
-					{ip} - {machine}
+					{ip} - {data}
 				</div>
 
 				{/* <div

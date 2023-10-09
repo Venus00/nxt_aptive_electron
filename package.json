@@ -109,8 +109,10 @@
 		"react-hook-notification": "^3.3.8",
 		"react-redux": "^8.0.2",
 		"react-router-dom": "^6.3.0",
+		"react-use-websocket": "^4.5.0",
 		"redux": "^4.2.0",
 		"serialport": "^10.4.0",
+		"socket.io-client": "^4.7.2",
 		"sprintf-js": "^1.1.2",
 		"timer-node": "^5.0.6"
 	},

@@ -9,7 +9,8 @@ import { RootState } from 'renderer/store/rootReducer';
 import GearsImage from '../images/gears.svg';
 import TaskImage from '../images/task.svg';
 import BubbleImage from '../images/chat_bubble.svg';
-
+import { useEffect, useState } from 'react';
+import { socket } from 'renderer/features/socket';
 const formatUptime = (seconds: number) => {
 	const minutes = Math.floor(seconds / 60) % 60;
 	const hours = Math.floor(Math.floor(seconds / 60) / 60);
@@ -29,10 +30,41 @@ const formatUptime = (seconds: number) => {
 };
 
 const DashboardPage = () => {
-	const { ip, mac, uptime } = useSelector((state: RootState) => state.device);
-	const { data, errCount, downtime, opCount } = useSelector(
-		(state: RootState) => state.machine
-	);
+	// const { ip, mac, uptime } = useSelector((state: RootState) => state.device);
+	// const { data, errCount, downtime, opCount } = useSelector(
+	// 	(state: RootState) => state.machine
+	// );
+
+	const [data,setData] = useState<any>(null);
+	useEffect(() => {
+		function onConnect() {
+			console.log("connected");
+		}
+	
+		function onDisconnect() {
+		  	console.log("disconneted")
+		}
+		socket.addEventListener("message", (event) => {
+			console.log("Message from server ", event.data);
+			setData(JSON.parse(event.data))
+			const result = JSON.parse(event.data);
+			console.log(result.attributes[0].key)
+		  });
+	
+		// socket.on('connect', onConnect);
+		// socket.on('disconnect', onDisconnect);
+		// socket.on('data',(data)=>{
+		// 	console.log(data)
+		// 	setData(JSON.parse(data));
+		// });
+
+	
+		return () => {
+		//   socket.off('connect', onConnect); 
+		//   socket.off('disconnect', onDisconnect);
+		//   socket.off('data');
+		};
+	  }, []);
 
 	return (
 		<>
@@ -41,7 +73,7 @@ const DashboardPage = () => {
 					<HeadLine text="DownTime">
 						<img alt="ICON" src={TaskImage} className="h-12 w-12" />
 					</HeadLine>
-					<HeadLine text="UP TIME">
+					<HeadLine text="  UP TIME">
 						<img
 							alt="ICON"
 							src={GearsImage}
@@ -49,12 +81,12 @@ const DashboardPage = () => {
 						/>
 					</HeadLine>
 					<Spinner
-						numerator={downtime}
+						numerator={data ? data.downTime.value : ""}
 						denomerator={60}
-						unit={formatUptime(downtime)}
+						unit={formatUptime(data ? data.downTime.value : 0)}
 					/>
 					<div className="p-8">
-						<ClockDisplay timer={formatUptime(uptime)} />
+						<ClockDisplay timer={formatUptime(data ? data.upTime.value : 0)} />
 					</div>
 				</div>
 			</div>
@@ -62,12 +94,12 @@ const DashboardPage = () => {
 			<div className="w-screen flex justify-evenly items-center">
 				<Card
 					icon={BubbleImage}
-					title="Ref"
-					body={data['Splice'] ? data['Splice'] : '--'}
+					title={data ? data.attributes[0].key : ""}
+					body={data ? data.attributes[0].value : ""}
 				/>
-				<Card icon={BubbleImage} title="ErrNo" body={errCount} />
-				<Card icon={BubbleImage} title="Machine" body={'USW_'} />
-				<Card icon={BubbleImage} title="Count" body={opCount} />
+				<Card icon={BubbleImage} title={data ? data.attributes[1].key : ""} body={data ? data.attributes[1].value : ""} />
+				<Card icon={BubbleImage} title={data ? data.attributes[2].key : ""} body={data ? data.attributes[2].value : ""} />
+				<Card icon={BubbleImage} title={data ? data.attributes[3].key : ""} body={data ? data.attributes[3].value : ""} />
 			</div>
 		</>
 	);
