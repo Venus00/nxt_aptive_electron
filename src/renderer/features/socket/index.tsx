@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 
-const URL = 'ws://192.168.10.32:1880/data';
+const URL = 'ws://localhost:1880/data';
 
 // export const socket = io(URL,{
 //     autoConnect:false
