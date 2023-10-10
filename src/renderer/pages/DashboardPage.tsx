@@ -10,7 +10,8 @@ import GearsImage from '../images/gears.svg';
 import TaskImage from '../images/task.svg';
 import BubbleImage from '../images/chat_bubble.svg';
 import { useEffect, useState } from 'react';
-import { socket } from 'renderer/features/socket';
+import { io } from 'socket.io-client';
+
 const formatUptime = (seconds: number) => {
 	const minutes = Math.floor(seconds / 60) % 60;
 	const hours = Math.floor(Math.floor(seconds / 60) / 60);
@@ -36,14 +37,9 @@ const DashboardPage = () => {
 	// );
 
 	const [data,setData] = useState<any>(null);
+	const URL = 'ws://192.168.10.32:1880/data';
+    const socket = new WebSocket(URL)
 	useEffect(() => {
-		function onConnect() {
-			console.log("connected");
-		}
-	
-		function onDisconnect() {
-		  	console.log("disconneted")
-		}
 		socket.addEventListener("message", (event) => {
 			console.log("Message from server ", event.data);
 			setData(JSON.parse(event.data))
