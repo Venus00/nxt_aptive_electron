@@ -37,7 +37,7 @@ const DashboardPage = () => {
 	// );
 
 	const [data,setData] = useState<any>(null);
-	const URL = 'ws://192.168.10.32:1880/data';
+	const URL = 'ws://localhost:1880/data';
     const socket = new WebSocket(URL)
 	useEffect(() => {
 		socket.addEventListener("message", (event) => {
