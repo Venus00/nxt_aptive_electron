@@ -10,7 +10,8 @@ import GearsImage from '../images/gears.svg';
 import TaskImage from '../images/task.svg';
 import BubbleImage from '../images/chat_bubble.svg';
 import { useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
+
+
 
 const formatUptime = (seconds: number) => {
 	const minutes = Math.floor(seconds / 60) % 60;
@@ -37,28 +38,31 @@ const DashboardPage = () => {
 	// );
 
 	const [data,setData] = useState<any>(null);
-	const URL = 'ws://localhost:1880/data';
-    const socket = new WebSocket(URL)
 	useEffect(() => {
-		socket.addEventListener("message", (event) => {
-			console.log("Message from server ", event.data);
-			setData(JSON.parse(event.data))
-			const result = JSON.parse(event.data);
-			console.log(result.attributes[0].key)
-		  });
-	
-		// socket.on('connect', onConnect);
-		// socket.on('disconnect', onDisconnect);
-		// socket.on('data',(data)=>{
-		// 	console.log(data)
-		// 	setData(JSON.parse(data));
-		// });
 
-	
+		function connect() {
+			var ws = new WebSocket('ws://localhost:1880/data');
+		 
+			ws.onmessage = function(event) {
+			  console.log("Message from server ", event.data);
+			setData(JSON.parse(event.data))
+			};
+		  
+			ws.onclose = function(e) {
+			  console.log('Socket is closed. Reconnect will be attempted in 1 second.', e.reason);
+			  setTimeout(function() {
+				connect();
+			  }, 1000);
+			};
+		  
+			ws.onerror = function(err) {
+				setTimeout(function() {
+					connect();
+				  }, 1000);
+			};
+		}
+		connect()
 		return () => {
-		//   socket.off('connect', onConnect); 
-		//   socket.off('disconnect', onDisconnect);
-		//   socket.off('data');
 		};
 	  }, []);
 
