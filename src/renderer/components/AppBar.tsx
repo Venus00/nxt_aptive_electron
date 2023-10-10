@@ -20,29 +20,34 @@ const AppBar: React.FC<ComponentPropTypes> = ({
 		(state: RootState) => state.device
 	);
 
-	const [data,setData] = useState<any>('');
-	// useEffect(() => {
-	// 	function onConnect() {
-	// 		console.log("connected");
-	// 	}
-	
-	// 	function onDisconnect() {
-	// 	  	console.log("disconneted")
-	// 	}
-	
-	// 	socket.on('connect', onConnect);
-	// 	socket.on('disconnect', onDisconnect);
-	// 	socket.on('machine',(data)=>{
-	// 		setData(data);
-	// 	});
+	const [data,setData] = useState<any>(null);
+	useEffect(() => {
 
-	
-	// 	return () => {
-	// 	  socket.off('connect', onConnect);
-	// 	  socket.off('disconnect', onDisconnect);
-	// 	  socket.off('machine');
-	// 	};
-	//   }, []);
+		function connect() {
+			var ws = new WebSocket('ws://localhost:1880/data');
+		 
+			ws.onmessage = function(event) {
+			  console.log("Message from server ", event.data);
+			  console.log(data)
+			setData(JSON.parse(event.data))
+			};
+		  
+			ws.onclose = function(e) {
+			  console.log('Socket is closed. Reconnect will be attempted in 1 second.', e.reason);
+			  setTimeout(function() {
+				connect();
+			  }, 1000);
+			};
+			ws.onerror = function(err) {
+				setTimeout(function() {
+					connect();
+				  }, 1000);
+			};
+		}
+		connect()
+		return () => {
+		};
+	  }, []);
 	return (
 		<div className="w-full h-16 px-8 py-2 flex justify-evenly items-center bg-white shadow-md">
 			{/* APTIVE LOGO */}
@@ -67,7 +72,7 @@ const AppBar: React.FC<ComponentPropTypes> = ({
 				</div>
 
 				<div className="font-bold text-xl">
-					{ip} - {data}
+					{ip} - {data? data.machine : ''}
 				</div>
 
 				{/* <div

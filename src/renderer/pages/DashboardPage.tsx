@@ -54,7 +54,6 @@ const DashboardPage = () => {
 				connect();
 			  }, 1000);
 			};
-		  
 			ws.onerror = function(err) {
 				setTimeout(function() {
 					connect();
