@@ -1,7 +1,6 @@
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from 'renderer/store/rootReducer';
-import { socket } from 'renderer/features/socket';
 import { useEffect, useState } from 'react';
 /* eslint-disable react/prop-types */
 interface ComponentPropTypes {
@@ -59,7 +58,7 @@ const AppBar: React.FC<ComponentPropTypes> = ({
 			<div className="w-1/3 flex justify-center items-center">
 				<div className="p-2">
 					<svg
-						fill={isConnected ? 'green' : 'orange'}
+						fill={'green'}
 						width="49"
 						height="37"
 						viewBox="0 0 49 37"
@@ -72,7 +71,7 @@ const AppBar: React.FC<ComponentPropTypes> = ({
 				</div>
 
 				<div className="font-bold text-xl">
-					{ip} - {data? data.machine : ''}
+					{data ? data.ip : ''} - {data? data.machine : ''}
 				</div>
 
 				{/* <div
