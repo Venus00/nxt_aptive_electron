@@ -16,7 +16,7 @@ const AppBar: React.FC<ComponentPropTypes> = ({
 	useEffect(() => {
 
 		function connect() {
-			var ws = new WebSocket('ws://192.168.10.32:1880/data');
+			var ws = new WebSocket('ws://localhost:1880/data');
 		 
 			ws.onmessage = function(event) {
 			setData(JSON.parse(event.data))
