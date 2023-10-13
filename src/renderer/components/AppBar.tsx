@@ -1,6 +1,3 @@
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { RootState } from 'renderer/store/rootReducer';
 import { useEffect, useState } from 'react';
 /* eslint-disable react/prop-types */
 interface ComponentPropTypes {
@@ -14,20 +11,14 @@ const AppBar: React.FC<ComponentPropTypes> = ({
 	time = 'time',
 	icon = 'icon',
 }) => {
-	const navigate = useNavigate();
-	const { ip, isConnected, machine } = useSelector(
-		(state: RootState) => state.device
-	);
 
 	const [data,setData] = useState<any>(null);
 	useEffect(() => {
 
 		function connect() {
-			var ws = new WebSocket('ws://localhost:1880/data');
+			var ws = new WebSocket('ws://192.168.10.32:1880/data');
 		 
 			ws.onmessage = function(event) {
-			  console.log("Message from server ", event.data);
-			  console.log(data)
 			setData(JSON.parse(event.data))
 			};
 		  

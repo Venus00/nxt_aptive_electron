@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useSelector } from 'react-redux';
 import Card from 'renderer/components/Card';
 import ClockDisplay from 'renderer/components/ClockDisplay';
 import HeadLine from 'renderer/components/HeadLine';
 import Spinner from 'renderer/components/Spinner';
-import { RootState } from 'renderer/store/rootReducer';
 
 import GearsImage from '../images/gears.svg';
 import TaskImage from '../images/task.svg';
@@ -41,10 +39,9 @@ const DashboardPage = () => {
 	useEffect(() => {
 
 		function connect() {
-			var ws = new WebSocket('ws://localhost:1880/data');
+			var ws = new WebSocket('ws://192.168.10.32:1880/data');
 		 
 			ws.onmessage = function(event) {
-			  console.log("Message from server ", event.data);
 			setData(JSON.parse(event.data))
 			};
 		  

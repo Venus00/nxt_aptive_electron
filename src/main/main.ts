@@ -230,14 +230,14 @@ ipcMain.on('connected', () => {
 });
 
 app.on('ready', () => {
-	refreshIP();
+	//refreshIP();
 	// hearthBeat();
 	// setInterval(hearthBeat, 1000);
-	setInterval(refreshIP, 10000);
+	//setInterval(refreshIP, 10000);
 
-	const file = fs.readFileSync(getAssetPath('cfg.json'));
-	globalConfig = JSON.parse(file.toString());
-	deviceState.machine = globalConfig.device.name;
+	// const file = fs.readFileSync(getAssetPath('cfg.json'));
+	// globalConfig = JSON.parse(file.toString());
+	// deviceState.machine = globalConfig.device.name;
 });
 
 app.on('window-all-closed', () => {
