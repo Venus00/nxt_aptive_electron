@@ -4,40 +4,17 @@ interface ComponentPropTypes {
 	logo?: string;
 	time?: string | number;
 	icon?: string;
+	data:any;
 }
 
 const AppBar: React.FC<ComponentPropTypes> = ({
 	logo = 'logo',
 	time = 'time',
 	icon = 'icon',
+	data
 }) => {
 
-	const [data,setData] = useState<any>(null);
-	useEffect(() => {
-
-		function connect() {
-			var ws = new WebSocket('ws://localhost:1880/data');
-		 
-			ws.onmessage = function(event) {
-			setData(JSON.parse(event.data))
-			};
-		  
-			ws.onclose = function(e) {
-			  console.log('Socket is closed. Reconnect will be attempted in 1 second.', e.reason);
-			  setTimeout(function() {
-				connect();
-			  }, 1000);
-			};
-			ws.onerror = function(err) {
-				setTimeout(function() {
-					connect();
-				  }, 1000);
-			};
-		}
-		connect()
-		return () => {
-		};
-	  }, []);
+	
 	return (
 		<div className="w-full h-16 px-8 py-2 flex justify-evenly items-center bg-white shadow-md">
 			{/* APTIVE LOGO */}

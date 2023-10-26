@@ -7,8 +7,6 @@ import Spinner from 'renderer/components/Spinner';
 import GearsImage from '../images/gears.svg';
 import TaskImage from '../images/task.svg';
 import BubbleImage from '../images/chat_bubble.svg';
-import { useEffect, useState } from 'react';
-
 
 
 const formatUptime = (seconds: number) => {
@@ -29,38 +27,8 @@ const formatUptime = (seconds: number) => {
 	return result;
 };
 
-const DashboardPage = () => {
-	// const { ip, mac, uptime } = useSelector((state: RootState) => state.device);
-	// const { data, errCount, downtime, opCount } = useSelector(
-	// 	(state: RootState) => state.machine
-	// );
+const DashboardPage = (props:any) => {
 
-	const [data,setData] = useState<any>(null);
-	useEffect(() => {
-
-		function connect() {
-			var ws = new WebSocket('ws://localhost:1880/data');
-		 
-			ws.onmessage = function(event) {
-			setData(JSON.parse(event.data))
-			};
-		  
-			ws.onclose = function(e) {
-			  console.log('Socket is closed. Reconnect will be attempted in 1 second.', e.reason);
-			  setTimeout(function() {
-				connect();
-			  }, 1000);
-			};
-			ws.onerror = function(err) {
-				setTimeout(function() {
-					connect();
-				  }, 1000);
-			};
-		}
-		connect()
-		return () => {
-		};
-	  }, []);
 
 	return (
 		<>
@@ -77,12 +45,12 @@ const DashboardPage = () => {
 						/>
 					</HeadLine>
 					<Spinner
-						numerator={data ? data.downTime.value : ""}
+						numerator={props.data ? props.data.downTime.value : ""}
 						denomerator={60}
-						unit={formatUptime(data ? data.downTime.value : 0)}
+						unit={formatUptime(props.data ? props.data.downTime.value : 0)}
 					/>
 					<div className="p-8">
-						<ClockDisplay timer={formatUptime(data ? data.upTime.value : 0)} />
+						<ClockDisplay timer={formatUptime(props.data ? props.data.upTime.value : 0)} />
 					</div>
 				</div>
 			</div>
@@ -90,12 +58,12 @@ const DashboardPage = () => {
 			<div className="w-screen flex justify-evenly items-center">
 				<Card
 					icon={BubbleImage}
-					title={data ? data.attributes[0].key : ""}
-					body={data ? data.attributes[0].value : ""}
+					title={props.data ? props.data.attributes[0].key : ""}
+					body={props.data ? props.data.attributes[0].value : ""}
 				/>
-				<Card icon={BubbleImage} title={data ? data.attributes[1].key : ""} body={data ? data.attributes[1].value : ""} />
-				<Card icon={BubbleImage} title={data ? data.attributes[2].key : ""} body={data ? data.attributes[2].value : ""} />
-				<Card icon={BubbleImage} title={data ? data.attributes[3].key : ""} body={data ? data.attributes[3].value : ""} />
+				<Card icon={BubbleImage} title={props.data ? props.data.attributes[1].key : ""} body={props.data ? props.data.attributes[1].value : ""} />
+				<Card icon={BubbleImage} title={props.data ? props.data.attributes[2].key : ""} body={props.data ? props.data.attributes[2].value : ""} />
+				<Card icon={BubbleImage} title={props.data ? props.data.attributes[3].key : ""} body={props.data ? props.data.attributes[3].value : ""} />
 			</div>
 		</>
 	);
