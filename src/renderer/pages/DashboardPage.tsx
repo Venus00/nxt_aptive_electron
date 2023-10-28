@@ -7,9 +7,12 @@ import Spinner from 'renderer/components/Spinner';
 import GearsImage from '../images/gears.svg';
 import TaskImage from '../images/task.svg';
 import BubbleImage from '../images/chat_bubble.svg';
-
+import { useSelector } from 'react-redux';
+import { DataState } from 'renderer/store/slice/data';
+import { RootState } from 'renderer/store/store';
 
 const formatUptime = (seconds: number) => {
+
 	const minutes = Math.floor(seconds / 60) % 60;
 	const hours = Math.floor(Math.floor(seconds / 60) / 60);
 	let result = '';
@@ -29,7 +32,8 @@ const formatUptime = (seconds: number) => {
 
 const DashboardPage = (props:any) => {
 
-
+	const {attributes,downTime,upTime} = useSelector((state:RootState)=>state.data)
+	console.log(downTime)
 	return (
 		<>
 			<div className="flex w-screen justify-center items-center grow p-8">
@@ -45,12 +49,12 @@ const DashboardPage = (props:any) => {
 						/>
 					</HeadLine>
 					<Spinner
-						numerator={props.data ? props.data.downTime.value : ""}
+						numerator={downTime.value}
 						denomerator={60}
-						unit={formatUptime(props.data ? props.data.downTime.value : 0)}
+						unit={formatUptime(downTime.value)}
 					/>
 					<div className="p-8">
-						<ClockDisplay timer={formatUptime(props.data ? props.data.upTime.value : 0)} />
+						<ClockDisplay timer={formatUptime(upTime.value)} />
 					</div>
 				</div>
 			</div>
@@ -58,12 +62,12 @@ const DashboardPage = (props:any) => {
 			<div className="w-screen flex justify-evenly items-center">
 				<Card
 					icon={BubbleImage}
-					title={props.data ? props.data.attributes[0].key : ""}
-					body={props.data ? props.data.attributes[0].value : ""}
+					title={attributes[0].key}
+					body={attributes[0].value}
 				/>
-				<Card icon={BubbleImage} title={props.data ? props.data.attributes[1].key : ""} body={props.data ? props.data.attributes[1].value : ""} />
-				<Card icon={BubbleImage} title={props.data ? props.data.attributes[2].key : ""} body={props.data ? props.data.attributes[2].value : ""} />
-				<Card icon={BubbleImage} title={props.data ? props.data.attributes[3].key : ""} body={props.data ? props.data.attributes[3].value : ""} />
+				<Card icon={BubbleImage} title={attributes[1].key} body={attributes[1].value} />
+				<Card icon={BubbleImage} title={attributes[2].key} body={attributes[2].value} />
+				<Card icon={BubbleImage} title={attributes[3].key} body={attributes[3].value} />
 			</div>
 		</>
 	);

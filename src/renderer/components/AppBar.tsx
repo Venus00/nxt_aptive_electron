@@ -1,19 +1,20 @@
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux'
+import { RootState } from 'renderer/store/store';
 /* eslint-disable react/prop-types */
 interface ComponentPropTypes {
 	logo?: string;
 	time?: string | number;
 	icon?: string;
-	data:any;
 }
 
 const AppBar: React.FC<ComponentPropTypes> = ({
 	logo = 'logo',
 	time = 'time',
 	icon = 'icon',
-	data
 }) => {
 
+	const {ip,machine} = useSelector((state:RootState)=>state.data)
 	
 	return (
 		<div className="w-full h-16 px-8 py-2 flex justify-evenly items-center bg-white shadow-md">
@@ -39,9 +40,9 @@ const AppBar: React.FC<ComponentPropTypes> = ({
 				</div>
 
 				<div className="font-bold text-xl">
-					{data ? data.ip : ''} - {data? data.machine : ''}
+					{ip} - {machine}
 				</div>
-
+				
 				{/* <div
 					className="p-2"
 					role="button"
