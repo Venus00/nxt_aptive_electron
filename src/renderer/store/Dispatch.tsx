@@ -13,7 +13,7 @@ export default function Dispatch() {
 			return;
 		}
 		if(!clientRef.current) {
-			const client = new WebSocket('ws://localhost:8080');
+			const client = new WebSocket('ws://localhost:1880/data');
 			clientRef.current = client;
 			client.onclose = function() {
 				if(clientRef.current)
