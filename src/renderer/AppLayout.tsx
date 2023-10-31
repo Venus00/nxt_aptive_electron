@@ -11,7 +11,7 @@ const AppLayout = () => {
 	
 	
 	return (
-		<div className="h-screen w-screen flex flex-col justify-between rotate-180 items-center bg-slate-100">
+		<div className="h-screen w-screen flex flex-col justify-between items-center bg-slate-100">
 			<AppBar logo={APTIVImage} icon={NextronicImage}/>
 			<Outlet/>
 			{/* <div className="w-screen p-4 flex justify-center items-center">
