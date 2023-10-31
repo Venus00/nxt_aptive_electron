@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux'
+import { RootState } from 'renderer/store/store';
 /* eslint-disable react/prop-types */
 interface ComponentPropTypes {
 	logo?: string;
@@ -12,32 +14,8 @@ const AppBar: React.FC<ComponentPropTypes> = ({
 	icon = 'icon',
 }) => {
 
-	const [data,setData] = useState<any>(null);
-	useEffect(() => {
-
-		function connect() {
-			var ws = new WebSocket('ws://localhost:1880/data');
-		 
-			ws.onmessage = function(event) {
-			setData(JSON.parse(event.data))
-			};
-		  
-			ws.onclose = function(e) {
-			  console.log('Socket is closed. Reconnect will be attempted in 1 second.', e.reason);
-			  setTimeout(function() {
-				connect();
-			  }, 1000);
-			};
-			ws.onerror = function(err) {
-				setTimeout(function() {
-					connect();
-				  }, 1000);
-			};
-		}
-		connect()
-		return () => {
-		};
-	  }, []);
+	const {ip,machine} = useSelector((state:RootState)=>state.data)
+	
 	return (
 		<div className="w-full h-16 px-8 py-2 flex justify-evenly items-center bg-white shadow-md">
 			{/* APTIVE LOGO */}
@@ -62,9 +40,9 @@ const AppBar: React.FC<ComponentPropTypes> = ({
 				</div>
 
 				<div className="font-bold text-xl">
-					{data ? data.ip : ''} - {data? data.machine : ''}
+					{ip} - {machine}
 				</div>
-
+				
 				{/* <div
 					className="p-2"
 					role="button"
