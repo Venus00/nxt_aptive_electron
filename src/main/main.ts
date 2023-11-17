@@ -14,7 +14,7 @@
 import path from 'node:path';
 import fs from 'node:fs';
 import { app, BrowserWindow, ipcMain, shell } from 'electron';
-import mac from 'macaddress';
+//import mac from 'macaddress';
 import MenuBuilder from './menu';
 import {
 	generateDeviceID,
