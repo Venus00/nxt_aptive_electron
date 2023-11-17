@@ -30,14 +30,14 @@ import {
 // 	ON_MACHINE_OP_FAIL,
 // 	ON_MACHINE_STATE_UPDATE,
 // } from '../shared/Channels';
-import { ConnectionClient } from './ConnectionClient';
+//import { ConnectionClient } from './ConnectionClient';
 // import { EventType, USWMachine } from './USWMachine';
 
 app.disableHardwareAcceleration();
 
 let mainWindow: BrowserWindow | null = null;
 let globalConfig: any;
-const clients: ConnectionClient[] = [];
+//const clients: ConnectionClient[] = [];
 // eslint-disable-next-line @typescript-eslint/no-use-before-define
 // const machine = new USWMachine(
 // 	process.platform === 'linux' ? '/dev/ttyS1' : 'COM13',
@@ -205,24 +205,24 @@ ipcMain.on('startup', () => {
 ipcMain.on('connected', () => {
 	try {
 		console.log('connected');
-		const id = generateDeviceID(deviceState.mac);
-		const username = id;
-		const password = generateMqttPassword(id);
+		// const id = generateDeviceID(deviceState.mac);
+		// const username = id;
+		// const password = generateMqttPassword(id);
 
-		globalConfig.connection.brokers.forEach((broker: any) => {
-			const alreadyCreated = clients.find((c) => c.name === broker.name);
-			if (alreadyCreated) return;
-			clients.push(
-				new ConnectionClient(
-					broker.name,
-					broker.ip,
-					broker.port,
-					`044${id}`,
-					username,
-					password
-				)
-			);
-		});
+		// globalConfig.connection.brokers.forEach((broker: any) => {
+		// 	const alreadyCreated = clients.find((c) => c.name === broker.name);
+		// 	if (alreadyCreated) return;
+		// 	clients.push(
+		// 		new ConnectionClient(
+		// 			broker.name,
+		// 			broker.ip,
+		// 			broker.port,
+		// 			`044${id}`,
+		// 			username,
+		// 			password
+		// 		)
+		// 	);
+		// });
 		ipcMain.emit('startup');
 	} catch (error) {
 		console.log((error as any).message);
